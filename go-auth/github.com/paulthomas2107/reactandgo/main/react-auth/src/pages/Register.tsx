@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { SyntheticEvent } from "react";
+import { Redirect } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [redirect, setRedirect] = useState(false);
+
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8000/api/register", {
+
+    await fetch("http://localhost:8000/api/register", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify({
@@ -17,10 +21,12 @@ const Register = () => {
       }),
     });
 
-    const content = await response.json();
-
-    console.log(content);
+    setRedirect(true);
   };
+
+  if (redirect) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <form onSubmit={submit}>
